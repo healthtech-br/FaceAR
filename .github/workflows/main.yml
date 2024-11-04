@@ -1,0 +1,35 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # ajuste para a versão Node que o seu projeto usa, se necessário
+
+      - name: Install dependencies
+        run: npm install
+
+      # Adicione uma etapa de build, caso seu projeto precise ser compilado antes do deploy
+      - name: Build project
+        run: npm run build  # ajuste o comando de build conforme necessário ou remova esta etapa se não precisar de build
+
+      # Deploy para o GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # defina o diretório de publicação; use './' para raiz ou './docs' se usar uma pasta `docs`
